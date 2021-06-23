@@ -38,14 +38,7 @@ train_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406],
                          [0.229, 0.224, 0.225])])
 
-valid_transforms = transforms.Compose([
-    transforms.Resize(size=256),
-    transforms.CenterCrop(size=224),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406],
-                         [0.229, 0.224, 0.225])])
-
-test_transforms = transforms.Compose([
+valid_test_transforms = transforms.Compose([
     transforms.Resize(size=256),
     transforms.CenterCrop(size=224),
     transforms.ToTensor(),
@@ -54,8 +47,8 @@ test_transforms = transforms.Compose([
 
 # Image_Datasets
 train_dataset = datasets.ImageFolder(train_dir, transform=train_transforms),
-valid_dataset = datasets.ImageFolder(valid_dir, transform=valid_transforms),
-test_dataset = datasets.ImageFolder(test_dir, transform=test_transforms)
+valid_dataset = datasets.ImageFolder(valid_dir, transform=valid_test_transforms),
+test_dataset = datasets.ImageFolder(test_dir, transform=valid_test_transforms)
 
 # Data_loader
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
@@ -169,4 +162,6 @@ with torch.no_grad():
         print("Validation Batch number: {:03d}, Validation: Loss: {:.4f}, Accuracy: {:.4f}".format(j, loss.item(),
                                                                                                    acc.item()))
 
-        
+# Main Functions
+def Main():
+

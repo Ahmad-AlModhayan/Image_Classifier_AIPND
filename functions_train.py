@@ -6,7 +6,7 @@ from torchvision import transforms, datasets
 from train import args
 
 
-def train_transformer():
+def data_transformer():
     train_transforms = transforms.Compose([
         transforms.RandomResizedCrop(size=224),
         transforms.RandomHorizontalFlip(),

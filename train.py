@@ -20,13 +20,12 @@ train_dir = data_dir + '/train'
 valid_dir = data_dir + '/valid'
 test_dir = data_dir + '/test'
 
-train_transforms = f_t.train_transformer(train_dir)
-valid_transforms, test_transforms = f_t.valid_test_transformer()
+# Data files
+train_transforms, valid_transforms, test_transforms = f_t.data_transformer()
+train_dataset, valid_dataset, test_dataset = f_t.load_datasets(train_transforms, train_dir, valid_transforms, valid_dir,
+                                                               test_transforms, test_dir)
+train_loader, valid_loader, test_loader = f_t.data_loader(train_dataset, valid_dataset, test_dataset)
 
-train_dataset = datasets.ImageFolder(train_dir, transform=train_transforms)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
-
-test_dataset = datasets.ImageFolder(test_dir, transform=test_transforms)
 # Architecture
 if args.arch == 'vgg16':
     input_size = 25088

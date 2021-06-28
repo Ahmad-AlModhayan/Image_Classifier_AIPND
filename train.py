@@ -20,10 +20,13 @@ train_dir = data_dir + '/train'
 valid_dir = data_dir + '/valid'
 test_dir = data_dir + '/test'
 
-train_loader = f_t.train_data_load(train_dir)
-valid_loader = f_t.valid_test_data_load(valid_dir)
-test_loader = f_t.valid_test_data_load(test_dir)
+train_transforms = f_t.train_transformer(train_dir)
+valid_transforms, test_transforms = f_t.valid_test_transformer()
 
+train_dataset = datasets.ImageFolder(train_dir, transform=train_transforms)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+test_dataset = datasets.ImageFolder(test_dir, transform=test_transforms)
 # Architecture
 if args.arch == 'vgg16':
     input_size = 25088
@@ -46,5 +49,11 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), args.learning_rate)
 
 # Classifier Training
-f_t.train_classifier(model, optimizer, criterion, train_loader, valid_loader)
+f_t.train_classifier(model, optimizer, criterion, train_loader, valid_loader, args.epochs)
+
+# Testing My Network
+f_t.testing(model, test_loader, criterion)
+
+# Save Checkpoint
+f_t.save_checkpoint(model, train_dataset)
 

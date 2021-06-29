@@ -3,6 +3,8 @@ import functions_train as f_train
 from torchvision import models
 from torch import nn, optim
 from collections import OrderedDict
+import torch
+import json
 
 # Arguments
 parser = argparse.ArgumentParser(description='Build and Train the Model.')
@@ -12,7 +14,7 @@ parser.add_argument("--arch", default='vgg16', help=' Model architecture')
 parser.add_argument("--learning_rate", type=float, default=0.001, help='Learning rate')
 parser.add_argument("--hidden_units", type=int, default=5000, help='Hidden units')
 parser.add_argument("--epochs", type=int, default=18, help='Number of epochs')
-parser.add_argument('--gpu', type=bool, action='store_true', help='Choose this argument if you want to use GPU')
+parser.add_argument('--gpu', action='store_true', default=True, help='Choose this argument if you want to use GPU')
 args = parser.parse_args()
 
 data_dir = args.data_dir
@@ -50,6 +52,8 @@ if args.hidden_units == 5000:
 else:
     hidden_units = args.hidden_units
 
+with open('cat_to_name.json', 'r') as f:
+    cat_to_name = json.load(f)
 device = torch.device('cuda' if args.gpu and torch.cuda.is_available() else 'cpu')
 
 # Initial_Classifier

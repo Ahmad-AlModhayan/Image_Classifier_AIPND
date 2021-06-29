@@ -109,7 +109,7 @@ def train_classifier(model, optimizer, criterion, train_loader, valid_loader, ar
 
 ####################################################
 def testing(model, test_loader, criterion):
-    test_loss, accuracy = validation(model, test_loader, criterion)
+    test_loss, accuracy = validation(model, test_loader, criterion, device)
     print("Test Loss: {:.3f}.. ".format(test_loss / len(test_loader)),
           "Test Accuracy: {:.3f}".format(accuracy / len(test_loader)))
 
@@ -119,10 +119,7 @@ def save_checkpoint(model, train_dataset, arch, hidden_units, lr, epochs, input_
     model.class_to_idx = train_dataset.class_to_idx
 
     checkpoint = {'arch': arch,
-                  'hidden_units': hidden_units,
-                  'learning_rate': lr,
-                  'epochs': epochs,
-                  'input_size':  input_size,
+                  'classifier': model.classifier,
                   'class_to_idx': model.class_to_idx,
                   'model_state_dict': model.state_dict()
                   }

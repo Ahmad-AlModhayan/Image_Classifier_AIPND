@@ -77,8 +77,8 @@ def process_image(image):
     img.thumbnail(size)
 
     center = original_width / 4, original_height / 4
-    left, top, right, bottom = center[0] - (244 / 2), center[1] - (244 / 2), center[0] + (244 / 2), center[1] + (
-            244 / 2)
+    left, top, right, bottom = center[0] - (224 / 2), center[1] - (224 / 2), center[0] + (224 / 2), center[1] + (
+            224 / 2)
     img = img.crop((left, top, right, bottom))
 
     np_img = np.array(img) / 255
@@ -119,7 +119,7 @@ def imshow(image, ax=None):
 
 
 ####################################################
-def predict(image_path, model, jsonfile, top_k=5):
+def predict(image_path, model, jsonfile, device='cuda', top_k=5):
     """ Predict the class (or classes) of an image using a trained deep learning model.
         image_path: string. Path to image, directly to image and not to folder.
         model: pytorch neural network.
@@ -130,8 +130,7 @@ def predict(image_path, model, jsonfile, top_k=5):
 
     # TODO: Implement the code to predict the class from an image file
 
-    # No need for GPU on this part (just causes problems)
-    model.to("cpu")
+    model.to(device)
 
     # Set model to evaluate
     model.eval()
@@ -176,8 +175,7 @@ def display_img(image_dir, jsonfile, model):
     ax = plt.subplot(2, 1, 1)
 
     # Set up title
-    flower_num = image_path.split('/')[2]
-    title = cat_to_name[flower_num]
+    title = cat_to_name[image_path]
 
     # Plot flower
     img = process_image(image_path)

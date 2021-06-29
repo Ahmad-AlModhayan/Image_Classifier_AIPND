@@ -49,6 +49,8 @@ if args.hidden_units == 5000:
 else:
     hidden_units = args.hidden_units
 
+device = torch.device('cuda' if args.gpu and torch.cuda.is_available() else 'cpu')
+
 # Initial_Classifier
 classifier = nn.Sequential(OrderedDict([
     ('fc1', nn.Linear(input_size, hidden_units)),

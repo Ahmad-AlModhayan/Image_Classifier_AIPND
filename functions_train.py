@@ -44,21 +44,20 @@ def load_datasets(train_transforms, train_dir, valid_transforms, valid_dir, test
 # Function of Load Data
 def data_loader(train_dataset, valid_dataset, test_dataset):
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
-    valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=64, shuffle=True)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=True)
+    valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=64, shuffle=False)
+    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
     return train_loader, valid_loader, test_loader
 
 
 ####################################################
 # Validation Function
-def validation(model, valid_loader, criterion):
+def validation(model, valid_loader, criterion, device):
     valid_loss = 0
     accuracy = 0
 
     for inputs, labels in valid_loader:
-        inputs, labels = inputs.to('cuda'), labels.to('cuda')
-
+        inputs, labels = inputs.to(device), labels.to(device)
         output = model.forward(inputs)
         valid_loss += criterion(output, labels).item()
 
@@ -71,24 +70,20 @@ def validation(model, valid_loader, criterion):
 
 ####################################################
 # Train Function
-def train_classifier(model, optimizer, criterion, train_loader, valid_loader, args_epochs, device='cpu'):
+def train_classifier(model, optimizer, criterion, train_loader, valid_loader, args_epochs, device):
     running_loss = 0
     epochs = args_epochs
     steps = 0
     prints_every = 40
 
-    if device == 'gpu' and torch.cuda.is_available():
-        model.to('cuda')
-        print('GPU is available')
-    else:
-        print('GPU not available')
+    model.to(device)
 
     for epoch in range(epochs):
 
         model.train()
 
         for inputs, labels in iter(train_loader):
-            inputs, labels = inputs.to('cuda'), labels.to('cuda')
+            inputs, labels = inputs.to(device), labels.to(device)
             steps += 1
             optimizer.zero_grad()
             output = model.forward(inputs)

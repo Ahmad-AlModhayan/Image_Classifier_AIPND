@@ -13,13 +13,25 @@ import seaborn as sb
 def load_checkpoint(filepath):
     
     checkpoint = torch.load(filepath)
-    if checkpoint["arch"] == "vgg16":
-
+    
+    if checkpoint["arch"] == 'vgg16':
+        print("training using vgg")
         model = models.vgg16(pretrained=True)
         for parameter in model.parameters():
             parameter.requires_grad = False
+        input_size = 25088
+    elif checkpoint["arch"] == 'densenet121':
+        print("training using densenet")
+        model = models.densenet121(pretrained=True)
+        for parameter in model.parameters():
+            parameter.requires_grad = False
+        input_size = 1024
     else:
-        print("The Architecture is not recognized")
+        print("training using alexnet")
+        model = models.alexnet(pretrained=True)
+        for parameter in model.parameters():
+            parameter.requires_grad = False
+        input_size = 9216
 
     model.class_to_idx = checkpoint['class_to_idx']
 

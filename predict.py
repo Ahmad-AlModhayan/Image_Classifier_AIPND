@@ -11,7 +11,7 @@ parser.add_argument('--gpu', action='store_true', help='Choose this argument if 
 args = parser.parse_args()
 
 cat_to_name = f_predict.json_loader(args.category_names)
-
+device = torch.device('cuda' if args.gpu and torch.cuda.is_available() else 'cpu')
 model = f_predict.load_checkpoint(args.checkpoint)
 print(model)
 

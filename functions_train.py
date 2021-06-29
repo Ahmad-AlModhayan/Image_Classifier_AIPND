@@ -52,7 +52,7 @@ def data_loader(train_dataset, valid_dataset, test_dataset):
 
 ####################################################
 # Validation Function
-def validation(model, valid_loader, criterion, device='cuda'):
+def validation(model, valid_loader, criterion, device):
     valid_loss = 0
     accuracy = 0
 

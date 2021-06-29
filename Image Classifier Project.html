@@ -13303,6 +13303,25 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading: &#34;https://download.pytorch.org/models/vgg16-397923af.pth&#34; to /root/.torch/models/vgg16-397923af.pth
+100%|██████████| 553433881/553433881 [00:10&lt;00:00, 54227939.21it/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13314,7 +13333,7 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
     <span class="p">(</span><span class="s1">&#39;fc1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">25088</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)),</span>
     <span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()),</span>
     <span class="p">(</span><span class="s1">&#39;dropout&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)),</span>
-    <span class="p">(</span><span class="s1">&#39;fc2&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">120</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;fc2&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">102</span><span class="p">)),</span>
     <span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))]))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">classifier</span><span class="o">=</span> <span class="n">classifier</span>
 <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">NLLLoss</span><span class="p">()</span>
@@ -13331,13 +13350,14 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Validation Function</span>
-<span class="k">def</span> <span class="nf">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">gpu</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="c1"># Validation Function</span>
+<span class="k">def</span> <span class="nf">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
     <span class="n">valid_loss</span><span class="o">=</span> <span class="mi">0</span>
     <span class="n">accuracy</span> <span class="o">=</span> <span class="mi">0</span>
     
     <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">valid_loader</span><span class="p">:</span>
-        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         
         <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
         <span class="n">valid_loss</span> <span class="o">+=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
@@ -13364,14 +13384,14 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
 <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">prints_every</span> <span class="o">=</span> <span class="mi">40</span>
     
-<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
         
     <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
     
     <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">train_loader</span><span class="p">):</span>
-        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="n">steps</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
@@ -13386,7 +13406,7 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
             <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
                 
             <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-                <span class="n">valid_loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">)</span>
+                <span class="n">valid_loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Epoch {epoch+1}/</span><span class="si">{epochs}</span><span class="s2"> (steps: </span><span class="si">{steps}</span><span class="s2">).. &quot;</span>
               <span class="n">f</span><span class="s2">&quot;Train loss: {running_loss/len(train_loader):.3f}.. &quot;</span>
               <span class="n">f</span><span class="s2">&quot;Validation loss: {valid_loss/len(valid_loader):.3f}.. &quot;</span>
@@ -13483,7 +13503,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
 <span class="c1"># TODO: Do validation on the test set</span>
-<span class="n">test_loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">)</span>
+<span class="n">test_loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Loss: </span><span class="si">{:.3f}</span><span class="s2">.. &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_loss</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">test_loader</span><span class="p">)),</span>
           <span class="s2">&quot;Test Accuracy: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">test_loader</span><span class="p">)))</span>
 </pre></div>
@@ -13523,7 +13543,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Save the checkpoint </span>
@@ -13532,6 +13552,8 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
     <span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">class_to_idx</span>
 
     <span class="n">checkpoint</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;arch&#39;</span><span class="p">:</span> <span class="s2">&quot;vgg16&quot;</span><span class="p">,</span>
+                  <span class="s1">&#39;fc1&#39;</span><span class="p">:</span> <span class="mi">25088</span><span class="p">,</span>
+                  <span class="s1">&#39;dropout&#39;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span>
                   <span class="s1">&#39;class_to_idx&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span><span class="p">,</span>
                   <span class="s1">&#39;model_state_dict&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
                  <span class="p">}</span>
@@ -13556,7 +13578,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Write a function that loads a checkpoint and rebuilds the model</span>
@@ -13576,7 +13598,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
     <span class="p">(</span><span class="s1">&#39;fc1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">25088</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)),</span>
     <span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()),</span>
     <span class="p">(</span><span class="s1">&#39;dropout&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)),</span>
-    <span class="p">(</span><span class="s1">&#39;fc2&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">120</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;fc2&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">102</span><span class="p">)),</span>
     <span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))]))</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">classifier</span><span class="o">=</span> <span class="n">classifier</span>
@@ -13719,7 +13741,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
 <div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Predict the class (or classes) of an image using a trained deep learning model.</span>
 <span class="sd">        image_path: string. Path to image, directly to image and not to folder.</span>
 <span class="sd">        model: pytorch neural network.</span>
@@ -13731,7 +13753,7 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
     <span class="c1"># TODO: Implement the code to predict the class from an image file  </span>
 
     <span class="c1"># No need for GPU on this part (just causes problems)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     
     <span class="c1"># Set model to evaluate</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">();</span>
@@ -13792,15 +13814,14 @@ Epoch 18/18 (steps: 1840).. Train loss: 20.203.. Validation loss: 0.436.. Valida
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Set up title</span>
-<span class="n">flower_num</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">title_</span> <span class="o">=</span> <span class="n">cat_to_name</span><span class="p">[</span><span class="n">flower_num</span><span class="p">]</span>
+<span class="n">title</span> <span class="o">=</span> <span class="n">cat_to_name</span><span class="p">[</span><span class="n">flower_num</span><span class="p">]</span>
 
 <span class="c1"># Plot flower</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">process_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
 <span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">title_</span><span class="p">);</span>
 
 <span class="c1"># Make prediction</span>
-<span class="n">probs</span><span class="p">,</span> <span class="n">labs</span><span class="p">,</span> <span class="n">flowers</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> 
+<span class="n">probs</span><span class="p">,</span> <span class="n">labs</span><span class="p">,</span> <span class="n">flowers</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span> 
 
 <span class="c1"># Plot bar chart</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>

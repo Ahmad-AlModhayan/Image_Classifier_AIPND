@@ -119,7 +119,7 @@ def imshow(image, ax=None):
 
 
 ####################################################
-def predict(image_path, model, jsonfile, device='cuda', top_k=5):
+def predict(image_path, model, jsonfile, device, top_k=5):
     """ Predict the class (or classes) of an image using a trained deep learning model.
         image_path: string. Path to image, directly to image and not to folder.
         model: pytorch neural network.

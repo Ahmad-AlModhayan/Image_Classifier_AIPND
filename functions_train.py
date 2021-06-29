@@ -3,8 +3,6 @@ from torchvision import transforms, datasets
 
 ####################################################
 # Function of transforms
-from train import args
-
 
 def data_transformer():
     train_transforms = transforms.Compose([
@@ -72,13 +70,17 @@ def validation(model, valid_loader, criterion):
 
 ####################################################
 # Train Function
-def train_classifier(model, optimizer, criterion, train_loader, valid_loader, epochs):
+def train_classifier(model, optimizer, criterion, train_loader, valid_loader, args_epochs, device='cpu'):
     running_loss = 0
-    epochs = args.epochs
+    epochs = args_epochs
     steps = 0
     prints_every = 40
 
-    model.to('cuda')
+    if device=='gpu' and torch.cuda.is_available():
+        model.to('cuda')
+        print('GPU is available')
+    else:
+        print('GPU not available')
 
     for epoch in range(epochs):
 

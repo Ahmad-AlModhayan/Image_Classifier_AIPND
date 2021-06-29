@@ -44,6 +44,7 @@ else:
 for parameter in model.parameters():
     parameter.requires_grad = False
 
+# hidden_units
 if args.hidden_units == 5000:
     hidden_units = 5000
 else:

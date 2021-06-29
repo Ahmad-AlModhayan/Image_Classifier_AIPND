@@ -52,7 +52,7 @@ def data_loader(train_dataset, valid_dataset, test_dataset):
 
 ####################################################
 # Validation Function
-def validation(model, valid_loader, criterion, device):
+def validation(model, valid_loader, criterion, device='cuda'):
     valid_loss = 0
     accuracy = 0
 
@@ -97,7 +97,7 @@ def train_classifier(model, optimizer, criterion, train_loader, valid_loader, ar
                 model.eval()
 
                 with torch.no_grad():
-                    valid_loss, accuracy = validation(model, valid_loader, criterion)
+                    valid_loss, accuracy = validation(model, valid_loader, criterion, device)
                 print(f"Epoch {epoch + 1}/{epochs} (steps: {steps}).. "
                       f"Train loss: {running_loss / len(train_loader):.3f}.. "
                       f"Validation loss: {valid_loss / len(valid_loader):.3f}.. "
@@ -115,10 +115,14 @@ def testing(model, test_loader, criterion):
 
 
 ####################################################
-def save_checkpoint(model, train_dataset):
+def save_checkpoint(model, train_dataset, arch, hidden_units, lr, epochs, input_size):
     model.class_to_idx = train_dataset.class_to_idx
 
-    checkpoint = {'arch': "vgg16",
+    checkpoint = {'arch': arch,
+                  'hidden_units': hidden_units,
+                  'learning_rate': lr,
+                  'epochs': epochs,
+                  'input_size':  input_size,
                   'class_to_idx': model.class_to_idx,
                   'model_state_dict': model.state_dict()
                   }

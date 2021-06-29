@@ -10,9 +10,9 @@ parser.add_argument("--data_dir", default='flowers', help='Main directory')
 parser.add_argument("--save_dir", default='./checkpoint.pth')
 parser.add_argument("--arch", default='vgg16', help=' Model architecture')
 parser.add_argument("--learning_rate", type=float, default=0.001, help='Learning rate')
-parser.add_argument("--hidden_units")
+parser.add_argument("--hidden_units", type=int, default=5000, help='Hidden units')
 parser.add_argument("--epochs", type=int, default=18, help='Number of epochs')
-parser.add_argument("--gpu", type=bool)
+parser.add_argument('--gpu', action='store_true', help='Choose this argument if you want to use GPU')
 args = parser.parse_args()
 
 data_dir = args.data_dir
@@ -44,12 +44,17 @@ else:
 for parameter in model.parameters():
     parameter.requires_grad = False
 
+if args.hidden_units == 5000:
+    hidden_units = 5000
+else:
+    hidden_units = args.hidden_units
+
 # Initial_Classifier
 classifier = nn.Sequential(OrderedDict([
-    ('fc1', nn.Linear(input_size, 5000)),
+    ('fc1', nn.Linear(input_size, hidden_units)),
     ('relu', nn.ReLU()),
     ('dropout', nn.Dropout(p=0.5)),
-    ('fc2', nn.Linear(5000, 120)),
+    ('fc2', nn.Linear(hidden_units, cat_to_name)),
     ('output', nn.LogSoftmax(dim=1))]))
 model.classifier = classifier
 criterion = nn.NLLLoss()

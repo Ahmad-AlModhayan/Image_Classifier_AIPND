@@ -1,6 +1,7 @@
 import torch
 from torchvision import transforms, datasets
 
+
 ####################################################
 # Function of transforms
 
@@ -76,7 +77,7 @@ def train_classifier(model, optimizer, criterion, train_loader, valid_loader, ar
     steps = 0
     prints_every = 40
 
-    if device=='gpu' and torch.cuda.is_available():
+    if device == 'gpu' and torch.cuda.is_available():
         model.to('cuda')
         print('GPU is available')
     else:

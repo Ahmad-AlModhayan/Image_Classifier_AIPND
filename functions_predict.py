@@ -11,6 +11,7 @@ import seaborn as sb
 
 ####################################################
 def load_checkpoint(filepath):
+    
     checkpoint = torch.load(filepath)
     if checkpoint["arch"] == "vgg16":
 
@@ -23,10 +24,10 @@ def load_checkpoint(filepath):
     model.class_to_idx = checkpoint['class_to_idx']
 
     classifier = nn.Sequential(OrderedDict([
-        ('fc1', nn.Linear(25088, 5000)),
+        ('fc1', nn.Linear(input_size, hidden_units)),
         ('relu', nn.ReLU()),
         ('dropout', nn.Dropout(p=0.5)),
-        ('fc2', nn.Linear(5000, 120)),
+        ('fc2', nn.Linear(hidden_units, cat_to_name)),
         ('output', nn.LogSoftmax(dim=1))]))
 
     model.classifier = classifier

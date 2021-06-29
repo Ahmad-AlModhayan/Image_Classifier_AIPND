@@ -70,4 +70,4 @@ f_train.train_classifier(model, optimizer, criterion, train_loader, valid_loader
 f_train.testing(model, test_loader, criterion)
 
 # Save Checkpoint
-f_train.save_checkpoint(model, train_dataset)
+f_train.save_checkpoint(model, train_dataset, args.arch, args.hidden_units, args.learning_rate, args.epochs, input_size)

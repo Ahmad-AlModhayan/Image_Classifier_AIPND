@@ -1,9 +1,10 @@
 import argparse
-import functions_train as func
+import functions_train as f_train
 from torchvision import models
 from torch import nn, optim
 from collections import OrderedDict
 
+# Arguments
 parser = argparse.ArgumentParser(description='Build and Train the Model.')
 parser.add_argument("--data_dir", default='flowers', help='Main directory')
 parser.add_argument("--save_dir", default='./checkpoint.pth')
@@ -11,7 +12,7 @@ parser.add_argument("--arch", default='vgg16', help=' Model architecture')
 parser.add_argument("--learning_rate", type=float, default=0.001, help='Learning rate')
 parser.add_argument("--hidden_units")
 parser.add_argument("--epochs", type=int, default=18, help='Number of epochs')
-parser.add_argument("--gpu", type=bool, default=False)
+parser.add_argument("--gpu", type=bool)
 args = parser.parse_args()
 
 data_dir = args.data_dir
@@ -20,11 +21,11 @@ valid_dir = data_dir + '/valid'
 test_dir = data_dir + '/test'
 
 # Data files
-train_transforms, valid_transforms, test_transforms = func.data_transformer()
-train_dataset, valid_dataset, test_dataset = func.load_datasets(train_transforms, train_dir, valid_transforms,
-                                                                valid_dir,
-                                                                test_transforms, test_dir)
-train_loader, valid_loader, test_loader = func.data_loader(train_dataset, valid_dataset, test_dataset)
+train_transforms, valid_transforms, test_transforms = f_train.data_transformer()
+train_dataset, valid_dataset, test_dataset = f_train.load_datasets(train_transforms, train_dir, valid_transforms,
+                                                                   valid_dir,
+                                                                   test_transforms, test_dir)
+train_loader, valid_loader, test_loader = f_train.data_loader(train_dataset, valid_dataset, test_dataset)
 
 # Architecture
 if args.arch == 'vgg16':
@@ -55,10 +56,10 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), args.learning_rate)
 
 # Classifier Training
-func.train_classifier(model, optimizer, criterion, train_loader, valid_loader, args.epochs, args.gpu)
+f_train.train_classifier(model, optimizer, criterion, train_loader, valid_loader, args.epochs, args.gpu)
 
 # Testing My Network
-func.testing(model, test_loader, criterion)
+f_train.testing(model, test_loader, criterion)
 
 # Save Checkpoint
-func.save_checkpoint(model, train_dataset)
+f_train.save_checkpoint(model, train_dataset)

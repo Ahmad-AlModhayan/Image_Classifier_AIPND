@@ -11,9 +11,8 @@ import seaborn as sb
 
 ####################################################
 def load_checkpoint(filepath):
-    
     checkpoint = torch.load(filepath)
-    
+
     if checkpoint["arch"] == 'vgg16':
         print("training using vgg")
         model = models.vgg16(pretrained=True)
@@ -39,7 +38,7 @@ def load_checkpoint(filepath):
         ('fc1', nn.Linear(input_size, hidden_units)),
         ('relu', nn.ReLU()),
         ('dropout', nn.Dropout(p=0.5)),
-        ('fc2', nn.Linear(hidden_units, cat_to_name)),
+        ('fc2', nn.Linear(hidden_units, 102)),
         ('output', nn.LogSoftmax(dim=1))]))
 
     model.classifier = classifier
@@ -134,11 +133,10 @@ def predict(image_path, model, jsonfile, device, top_k=5):
 
     # Set model to evaluate
     model.eval()
-
+    image = process_image(image_path)
     cat_to_name = jsonfile
     # Convert image from numpy to torch
-    torch_image = torch.from_numpy(np.expand_dims(process_image(image_path),
-                                                  axis=0)).type(torch.FloatTensor).to("cpu")
+    torch_image = torch.from_numpy(image).type(torch.cuda.FloatTensor)
 
     # Find probabilities (results) by passing through the function (note the log softmax means that its on a log scale)
     log_probs = model.forward(torch_image)
@@ -174,15 +172,12 @@ def display_img(image_dir, jsonfile, model):
     plt.figure(figsize=(6, 10))
     ax = plt.subplot(2, 1, 1)
 
-    # Set up title
-    title = cat_to_name[image_path]
-
     # Plot flower
     img = process_image(image_path)
     imshow(img, ax)
 
     # Make prediction
-    probs, labs, flowers = predict(image_path, model, cat_to_name)
+    probs, labs, flowers = predict(image_path, model, cat_to_name, device)
 
     # Plot bar chart
     plt.subplot(2, 1, 2)

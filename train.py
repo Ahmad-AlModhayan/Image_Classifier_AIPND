@@ -14,7 +14,7 @@ parser.add_argument("--arch", default='vgg16', help=' Model architecture')
 parser.add_argument("--learning_rate", type=float, default=0.001, help='Learning rate')
 parser.add_argument("--hidden_units", type=int, default=5000, help='Hidden units')
 parser.add_argument("--epochs", type=int, default=18, help='Number of epochs')
-parser.add_argument('--gpu', action='store_true', default=True, help='Choose this argument if you want to use GPU')
+parser.add_argument('--gpu', action='store_true', help='Choose this argument if you want to use GPU')
 args = parser.parse_args()
 
 data_dir = args.data_dir
@@ -68,7 +68,7 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), args.learning_rate)
 
 # Classifier Training
-f_train.train_classifier(model, optimizer, criterion, train_loader, valid_loader, args.epochs, args.gpu)
+f_train.train_classifier(model, optimizer, criterion, train_loader, valid_loader, args.epochs, device)
 
 # Testing My Network
 f_train.testing(model, test_loader, criterion)

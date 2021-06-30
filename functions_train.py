@@ -115,7 +115,7 @@ def testing(model, test_loader, criterion):
 
 
 ####################################################
-def save_checkpoint(model, train_dataset, arch, hidden_units, lr, epochs, input_size):
+def save_checkpoint(model, train_dataset, arch):
     model.class_to_idx = train_dataset.class_to_idx
 
     checkpoint = {'arch': arch,
